@@ -1,0 +1,40 @@
+{
+  "name": "react-antd",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@storybook/addon-actions": "^6.4.19",
+    "@storybook/addon-essentials": "^6.4.19",
+    "@storybook/addon-interactions": "^6.4.19",
+    "@storybook/addon-jest": "^6.4.19",
+    "@storybook/addon-links": "^6.4.19",
+    "@storybook/builder-webpack5": "^6.4.19",
+    "@storybook/manager-webpack5": "^6.4.19",
+    "@storybook/react": "^6.4.19",
+    "@storybook/testing-library": "^0.0.9",
+    "@types/react-table": "^7.7.10",
+    "msw-storybook-addon": "^1.6.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "webpack": "^5.71.0"
+  },
+  "dependencies": {
+    "antd": "^4.19.2",
+    "axios": "^0.26.1",
+    "react-table": "^7.7.0",
+    "react-virtual": "^2.10.4"
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "msw": {
+    "workerDirectory": "public"
+  }
+}
