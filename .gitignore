@@ -1,0 +1,12 @@
+#mac
+.DS_Store
+# dependeces
+node_modules
+**/node_packages
+
+# test
+.jest-test-results.json
+coverage
+
+# yarn
+yarn.lock
