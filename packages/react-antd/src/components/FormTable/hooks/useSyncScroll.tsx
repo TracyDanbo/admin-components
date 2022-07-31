@@ -16,7 +16,7 @@ export const useSyncScroll = (
     | React.RefObject<HTMLElement>[]
     | React.MutableRefObject<Element | null>[],
   direction: SyncDirection,
-  enable: boolean = true
+  enable = true
 ) => {
   const enableSycers = useRef(enable);
   const syncers = useRef<
@@ -31,49 +31,52 @@ export const useSyncScroll = (
       removeListener: () => void;
     }[]
   >([]);
-  const timer = useRef<number | null>();
+  const timer = useRef<NodeJS.Timeout | null>();
 
-  const syncScrollOffset = useCallback((e) => {
-    subSyncers.current = syncers.current.filter(
-      (task) => task.node !== e.target
-    );
-    subSyncers.current.map((task, i) => {
-      task.removeListener();
-    });
-    requestAnimationFrame(() => {
-      if (timer.current) {
-        clearTimeout(timer.current);
-        timer.current = null;
-      }
-      subSyncers.current.map((task, i) => {
-        if (direction === SyncDirection.Horizontal) {
-          task.node.scrollLeft = e.target.scrollLeft;
-        }
-        if (direction === SyncDirection.Vertical) {
-          task.node.scrollTop = e.target.scrollTop;
-        }
-        if (direction === SyncDirection.Both) {
-          task.node.scrollLeft = e.target.scrollLeft;
-          task.node.scrollTop = e.target.scrollTop;
-        }
+  const syncScrollOffset = useCallback(
+    (e: any) => {
+      subSyncers.current = syncers.current.filter(
+        (task) => task.node !== e.target
+      );
+      subSyncers.current.map((task) => {
+        task.removeListener();
       });
-      timer.current = setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (timer.current) {
+          clearTimeout(timer.current);
+          timer.current = null;
+        }
         subSyncers.current.map((task) => {
-          task.node.addEventListener("scroll", syncScrollOffset, {
-            passive: true,
-          });
+          if (direction === SyncDirection.Horizontal) {
+            task.node.scrollLeft = e.target?.scrollLeft;
+          }
+          if (direction === SyncDirection.Vertical) {
+            task.node.scrollTop = e.target.scrollTop;
+          }
+          if (direction === SyncDirection.Both) {
+            task.node.scrollLeft = e.target.scrollLeft;
+            task.node.scrollTop = e.target.scrollTop;
+          }
         });
-        subSyncers.current = [];
-      }, 600);
-    });
-  }, []);
+        timer.current = setTimeout(() => {
+          subSyncers.current.map((task) => {
+            task.node.addEventListener("scroll", syncScrollOffset, {
+              passive: true,
+            });
+          });
+          subSyncers.current = [];
+        }, 600);
+      });
+    },
+    [direction]
+  );
 
   const addSyncer = useCallback(
     (
       ref: React.RefObject<HTMLElement> | React.MutableRefObject<Element | null>
     ) => {
       if (ref.current) {
-        ref.current!.addEventListener("scroll", syncScrollOffset, {
+        ref.current?.addEventListener("scroll", syncScrollOffset, {
           passive: true,
         });
         syncers.current.push({
@@ -86,7 +89,7 @@ export const useSyncScroll = (
         });
       }
     },
-    []
+    [syncScrollOffset]
   );
 
   const removeSyncer = useCallback((element: HTMLElement) => {
@@ -115,7 +118,6 @@ export const useSyncScroll = (
   }, []);
 
   useLayoutEffect(() => {
-    console.log(enableSycers.current);
     if (enableSycers.current) {
       refs.filter((ref) => ref.current).forEach(addSyncer);
     }
